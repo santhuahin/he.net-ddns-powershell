@@ -13,10 +13,10 @@ Write-Output "==> $DATE" | Tee-Object $logPath -Append
 
 ### Loads configuration file
 Try {
-  . $PSScriptRoot\he.het-ddns.conf.ps1
+  . $PSScriptRoot\he.net-ddns.conf.ps1
 }
 Catch {
-  Write-Output "he.het-ddns.conf.ps1 is missing or contains invalid syntax" | Tee-Object $logPath -Append
+  Write-Output "he.net-ddns.conf.ps1 is missing or contains invalid syntax" | Tee-Object $logPath -Append
   Exit
 }
 
@@ -28,7 +28,7 @@ if (($ipType -ne "private") -and ($ipType -ne "public")) {
 
 ### Get private ip from primary interface
 if ($ipType -eq 'private'){
-  $ip = $((Get-NetIPAddress -AddressFamily IPv4 -AddressState Preferred).IPAddress).Trim()
+  $ip = $((Find-NetRoute -RemoteIPAddress 1.1.1.1).IPAddress|out-string).Trim()
   if (!([bool]$ip) -or ($ip -eq "127.0.0.1")) {
     Write-Output "Error! Can't get private ip address" | Tee-Object $logPath -Append
     Exit
@@ -47,7 +47,7 @@ if ($ipType -eq 'public'){
 }
 
 ### Get current ipv4 address
-$dnsIp= (Resolve-DnsName -Name $hostname -Server ns1.he.net -Type A | Select-Object -First 1).IPAddress.Trim()
+$dnsIp= (Resolve-DnsName -DnsOnly -Name $hostname -Server ns1.he.net -Type A | Select-Object -First 1).IPAddress.Trim()
 if (![bool]$dnsIP) {
   Write-Output "Error! Can't resolve $hostname via ns1.he.net" | Tee-Object $logPath -Append
   Exit
@@ -72,9 +72,9 @@ $updateDNS = @{
   }
 }
 
-$update_dns_record_response = Invoke-RestMethod @updateDNS
-if ($update_dns_record_response.success -ne "True") {
-  Write-Output "Error! Update Failed" | Tee-Object $logPath -Append
+$updateResponse = Invoke-RestMethod @updateDNS
+if ($updateResponse -ne "good $ip") {
+  Write-Output "Error! Update Failed $updateResponse" | Tee-Object $logPath -Append
   Exit
 }
 
