@@ -1,5 +1,5 @@
 # he.net-ddns-powershell
-- Inspired by https://github.com/fire1ce/DDNS-Cloudflare-PowerShell
+- Inspired by and a modification of https://github.com/fire1ce/DDNS-Cloudflare-PowerShell
 - [dns.he.net](https://dns.he.net/) DDNS PowerShell script for **Windows**.
 - Choose any source IP address to update **private** or **public**.
 - For multiple LAN interfaces, script will automatically detect primary Interface.
