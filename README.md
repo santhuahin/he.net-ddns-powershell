@@ -16,7 +16,7 @@
 
 ## Installation
 
-[Download .zip from latest release](https://github.com/santhuahin/he.net-ddns-powershell/releases) and Unzip
+Clone the repo or [Download .zip](https://github.com/santhuahin/he.net-ddns-powershell/archive/refs/heads/main.zip)
 
 ## Config Parameters
 
